@@ -1,4 +1,3 @@
-import markdown
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from Backend.app.schemas.blog import BlogCreate, BlogOut, BlogUpdate

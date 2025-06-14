@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Input } from '/src/components/ui/input';
 import { Button } from '/src/components/ui/button';
 import RichTextEditor from '/src/components/ui/RichTextEditor';
-import { getAllBlogs } from '/src/action';
+import { createOrUpdateBlog, getAllBlogs } from '/src/action';
 
 const BlogFormPage = () => {
   const { slug } = useParams();
@@ -29,13 +29,18 @@ const BlogFormPage = () => {
     }
   }, [slug]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const payload = { title, tags, content };
-    console.log(isEdit ? 'Updating blog:' : 'Creating blog:', payload);
-    // Add create/update API call here
-    navigate('/');
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      const payload = { title, tags, content, slug };
+
+      try {
+        await createOrUpdateBlog(payload, isEdit);
+        navigate('/');
+      } catch (err) {
+        console.error('❌ Failed to submit blog:', err);
+        alert('Something went wrong while submitting the blog.');
+      }
+    };
 
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">

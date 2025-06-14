@@ -4,8 +4,8 @@ import { Card, CardContent } from '/src/components/ui/card';
 import { Button } from '/src/components/ui/button';
 import { Input } from '/src/components/ui/input';
 import { Textarea } from '/src/components/ui/textarea';
-import { getAllBlogs, submitContactMessage } from '/src/action';
-import { Pencil } from 'lucide-react';
+import { getAllBlogs, submitContactMessage, handleDelete } from '/src/action';
+import { Pencil, Trash2 } from 'lucide-react';
 
 const HomePage = () => {
   const [blogs, setBlogs] = useState([]);
@@ -25,20 +25,35 @@ const HomePage = () => {
   }, []);
 
   const handleContactSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await submitContactMessage(contact);
-      console.log('Contact message submitted:', contact);
-    } catch (err) {
-      console.error('Failed to submit contact message:', err);
-    }
-  };
+      e.preventDefault();
+
+      // Email validation regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(contact.email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      if (!contact.message.trim()) {
+        alert('Please enter a message.');
+        return;
+      }
+
+      try {
+        await submitContactMessage(contact);
+        alert('Message sent!');
+        setContact({ email: '', message: '' }); // Reset form
+      } catch (err) {
+        console.error('Failed to send message:', err);
+        alert('Something went wrong.');
+      }
+    };
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
       {/* Navbar */}
       <nav className="bg-black text-white px-4 sm:px-6 py-4 flex flex-wrap justify-between items-center shadow-md">
-        <h1 className="text-lg sm:text-xl font-bold">My Portfolio</h1>
+        <h1 className="text-lg sm:text-xl font-bold">Sandeep's Portfolio</h1>
         <div className="space-x-4 text-sm sm:text-base font-medium">
           <a href="#about" className="hover:text-gray-300">About</a>
           <a href="#blogs" className="hover:text-gray-300">Blogs</a>
@@ -49,12 +64,22 @@ const HomePage = () => {
       {/* Main Content */}
       <main className="flex-grow px-4 sm:px-6 md:px-12 lg:px-20 py-10 sm:py-16 space-y-16">
         {/* About Section */}
-        <section id="about" className="max-w-2xl mx-auto text-center space-y-4 sm:space-y-6">
-          <h2 className="text-3xl sm:text-4xl font-bold">Welcome to My Portfolio</h2>
-          <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-            I’m a passionate backend developer building fast, scalable apps. Explore my work and reach out!
+        <section id="about" className="max-w-3xl mx-auto text-center space-y-6 sm:space-y-8">
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-black via-gray-800 to-black">
+            Full-Stack Developer. GenAI Builder. Systems Crafter.
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-700 font-medium leading-relaxed">
+            I’m Sandeep — a Senior Software Engineer with a love for shipping real-world solutions that scale.
+            I specialize in Python, Django, React, and GenAI integrations, and I’ve built everything from document search engines to
+            GPT-powered bulk summarizers.
           </p>
+          <p className="text-base sm:text-lg text-gray-500 italic">
+            From crafting REST APIs to hacking on ChatGPT + Qdrant, I turn complex ideas into smooth, usable systems.
+            Currently focused on building intelligent apps and simplifying automation through code.
+          </p>
+          <p className="text-sm text-gray-400">Let’s build something smart and scalable. 🚀</p>
         </section>
+
 
         {/* Blog Section */}
         <section id="blogs" className="max-w-6xl mx-auto">
@@ -72,12 +97,20 @@ const HomePage = () => {
                     <p className="text-xs text-gray-400">{new Date(blog.created_at).toLocaleDateString()}</p>
                   </CardContent>
                 </Card>
-                <button
-                  onClick={() => navigate(`/blogs/${blog.slug}/edit`)}
-                  className="absolute top-2 right-2 p-1 bg-white rounded-full border opacity-0 group-hover:opacity-100 transition"
-                >
-                  <Pencil size={16} />
-                </button>
+                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                  <button
+                    onClick={() => navigate(`/blogs/${blog.slug}/edit`)}
+                    className="p-1 bg-white rounded-full border hover:bg-gray-100"
+                  >
+                    <Pencil size={16} />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(blog.slug)}
+                    className="p-1 bg-white rounded-full border hover:bg-red-100"
+                  >
+                    <Trash2 size={16} className="text-red-500" />
+                  </button>
+                </div>
               </div>
             ))}
 

@@ -1,4 +1,8 @@
-const BASE_URL = '';
+const BASE_URL = 'http://127.0.0.1:8000';
+
+const authHeader = () => ({
+  'Authorization': `Bearer ${localStorage.getItem('token')}`
+});
 
 export class BlogAPI {
   static async getAll() {
@@ -16,7 +20,10 @@ export class BlogAPI {
   static async create(blog: { title: string; slug: string; tags?: string; content: string }) {
     const response = await fetch(`${BASE_URL}/blogs`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+         ...authHeader(),
+      },
       body: JSON.stringify(blog),
     });
     if (!response.ok) throw new Error('Failed to create blog');
@@ -26,7 +33,10 @@ export class BlogAPI {
   static async update(slug: string, data: { title: string; slug: string; tags?: string; content: string }) {
     const response = await fetch(`${BASE_URL}/blogs/${slug}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+         ...authHeader(),
+      },
       body: JSON.stringify(data),
     });
     if (!response.ok) throw new Error('Failed to update blog');
@@ -34,7 +44,10 @@ export class BlogAPI {
   }
 
   static async delete(slug: string) {
-    const response = await fetch(`${BASE_URL}/blogs/${slug}`, { method: 'DELETE' });
+    const response = await fetch(`${BASE_URL}/blogs/${slug}`, {
+      method: 'DELETE',
+      headers:  authHeader(),
+    });
     if (!response.ok) throw new Error('Failed to delete blog');
     return await response.json();
   }
@@ -42,9 +55,11 @@ export class BlogAPI {
 
 export class ContactAPI {
   static async send(message: { email: string; message: string }) {
-    const response = await fetch(`${BASE_URL}/api/contact`, {
+    const response = await fetch(`${BASE_URL}/contact`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(message),
     });
     if (!response.ok) throw new Error('Failed to send contact message');
@@ -59,6 +74,7 @@ export class UploadAPI {
 
     const response = await fetch(`${BASE_URL}/upload`, {
       method: 'POST',
+      headers:  authHeader(),
       body: formData,
     });
 
