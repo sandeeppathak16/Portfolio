@@ -6,6 +6,7 @@ import { Input } from '/src/components/ui/input';
 import { Textarea } from '/src/components/ui/textarea';
 import { getAllBlogs, submitContactMessage, handleDelete } from '/src/action';
 import { Pencil, Trash2 } from 'lucide-react';
+import { isAdmin } from '/src/utils/auth';
 
 const HomePage = () => {
   const [blogs, setBlogs] = useState([]);
@@ -97,7 +98,7 @@ const HomePage = () => {
                     <p className="text-xs text-gray-400">{new Date(blog.created_at).toLocaleDateString()}</p>
                   </CardContent>
                 </Card>
-                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                {isAdmin() && <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
                   <button
                     onClick={() => navigate(`/blogs/${blog.slug}/edit`)}
                     className="p-1 bg-white rounded-full border hover:bg-gray-100"
@@ -110,19 +111,19 @@ const HomePage = () => {
                   >
                     <Trash2 size={16} className="text-red-500" />
                   </button>
-                </div>
+                </div>}
               </div>
             ))}
 
             {/* Create Blog Card */}
-            <Card
+            {isAdmin() && (<Card
               onClick={() => navigate('/blogs/create')}
               className="hover:shadow-xl border-2 border-dashed border-gray-300 cursor-pointer flex items-center justify-center h-40"
             >
               <CardContent className="text-gray-400 font-medium text-center">
                 + Create New Blog
               </CardContent>
-            </Card>
+            </Card>)}
           </div>
         </section>
 
