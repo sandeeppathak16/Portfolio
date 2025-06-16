@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from Backend.app.db.session import SessionLocal
 from Backend.app.core.security import verify_password, create_access_token
 from Backend.app.crud.user import get_user_by_username
-from Backend.app.models.user import User
 
 router = APIRouter(tags=["Auth"])
 
