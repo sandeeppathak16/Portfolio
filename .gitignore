@@ -10,7 +10,6 @@ __pycache__/
 node_modules/
 
 # Ignore frontend + backend build artifacts
-dist/
 build/
 *.log
 
