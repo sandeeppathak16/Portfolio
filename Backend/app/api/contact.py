@@ -4,7 +4,7 @@ from Backend.app.db.session import SessionLocal
 from Backend.app.schemas.contact import ContactCreate
 from Backend.app.crud.contact import create_contact
 
-router = APIRouter(prefix="/contact", tags=["Contact"])
+router = APIRouter(prefix="/api/contact", tags=["Contact"])
 
 
 def get_db():

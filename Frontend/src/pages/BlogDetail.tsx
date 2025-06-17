@@ -1,16 +1,17 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import MarkdownPreview from '@uiw/react-markdown-preview';
-import { getAllBlogs } from '/src/action';
+import { getAllBlogs } from '@/action';
+import type { Blog } from '@/action';
 
 const BlogDetail = () => {
   const { slug } = useParams();
-  const [blog, setBlog] = useState<any | null>(null);
+  const [blog, setBlog] = useState<Blog | null>(null);
 
   useEffect(() => {
     const fetchBlog = async () => {
       const blogs = await getAllBlogs();
-      const found = blogs.find((b) => b.slug === slug);
+      const found = blogs.find((b: Blog) => b.slug === slug);
       setBlog(found);
     };
 

@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '/src/components/ui/card';
-import { Button } from '/src/components/ui/button';
-import { Input } from '/src/components/ui/input';
-import { Textarea } from '/src/components/ui/textarea';
-import { getAllBlogs, submitContactMessage, handleDelete } from '/src/action';
+import { Card, CardContent } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { getAllBlogs, submitContactMessage, handleDelete } from '@/action';
 import { Pencil, Trash2 } from 'lucide-react';
-import { isAdmin } from '/src/utils/auth';
+import { isAdmin } from '@/utils/auth';
+import type { Blog } from '@/action';
 
 const HomePage = () => {
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
   const [contact, setContact] = useState({ email: '', message: '' });
   const navigate = useNavigate();
 
@@ -106,7 +107,7 @@ const HomePage = () => {
                     <Pencil size={16} />
                   </button>
                   <button
-                    onClick={() => handleDelete(blog.slug)}
+                    onClick={() => handleDelete(blog.slug, setBlogs)}
                     className="p-1 bg-white rounded-full border hover:bg-red-100"
                   >
                     <Trash2 size={16} className="text-red-500" />

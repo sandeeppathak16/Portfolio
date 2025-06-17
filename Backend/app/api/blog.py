@@ -5,7 +5,7 @@ from Backend.app.crud import blog as crud_blog
 from Backend.app.db.session import SessionLocal
 from Backend.app.api.deps import get_current_superuser
 
-router = APIRouter(prefix="/blogs", tags=["Blogs"])
+router = APIRouter(prefix="/api/blogs", tags=["Blogs"])
 
 
 def get_db():

@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL = '/api';
 
 const authHeader = () => ({
   'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -6,19 +6,19 @@ const authHeader = () => ({
 
 export class BlogAPI {
   static async getAll() {
-    const response = await fetch(`${BASE_URL}/blogs`);
+    const response = await fetch(`${BASE_URL}/blogs/`);
     if (!response.ok) throw new Error('Failed to fetch blogs');
     return await response.json();
   }
 
   static async getOne(slug: string) {
-    const response = await fetch(`${BASE_URL}/blogs/${slug}`);
+    const response = await fetch(`${BASE_URL}/blogs/${slug}/`);
     if (!response.ok) throw new Error('Failed to fetch blog');
     return await response.json();
   }
 
   static async create(blog: { title: string; slug: string; tags?: string; content: string }) {
-    const response = await fetch(`${BASE_URL}/blogs`, {
+    const response = await fetch(`${BASE_URL}/blogs/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export class BlogAPI {
   }
 
   static async update(slug: string, data: { title: string; slug: string; tags?: string; content: string }) {
-    const response = await fetch(`${BASE_URL}/blogs/${slug}`, {
+    const response = await fetch(`${BASE_URL}/blogs/${slug}/`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export class BlogAPI {
   }
 
   static async delete(slug: string) {
-    const response = await fetch(`${BASE_URL}/blogs/${slug}`, {
+    const response = await fetch(`${BASE_URL}/blogs/${slug}/`, {
       method: 'DELETE',
       headers:  authHeader(),
     });
@@ -55,7 +55,7 @@ export class BlogAPI {
 
 export class ContactAPI {
   static async send(message: { email: string; message: string }) {
-    const response = await fetch(`${BASE_URL}/contact`, {
+    const response = await fetch(`${BASE_URL}/contact/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export class UploadAPI {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch(`${BASE_URL}/upload`, {
+    const response = await fetch(`${BASE_URL}/upload/`, {
       method: 'POST',
       headers:  authHeader(),
       body: formData,

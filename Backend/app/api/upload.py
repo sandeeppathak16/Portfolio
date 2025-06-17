@@ -6,7 +6,7 @@ from fastapi import APIRouter, File, UploadFile, Depends, HTTPException
 
 from Backend.app.api.deps import get_current_superuser
 
-router = APIRouter(prefix="/upload", tags=["Upload"])
+router = APIRouter(prefix="/api/upload", tags=["Upload"])
 
 MEDIA_DIR = "media"
 

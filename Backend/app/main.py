@@ -22,7 +22,8 @@ os.makedirs("media", exist_ok=True)
 app = FastAPI(title="Sandeep Bhardwaj Portfolio api")
 
 origins = [
-    "http://localhost:5173",
+    "http://localhost:5173",  # Vite dev
+    "http://localhost:8000",  # FastAPI served frontend
 ]
 
 app.add_middleware(
@@ -60,5 +61,8 @@ app.include_router(auth.router)
 app.include_router(upload.router)
 app.include_router(contact.router)
 
-app.mount("/static", StaticFiles(directory="Backend/app/static"), name="static")
+# Serve media
 app.mount("/media", StaticFiles(directory="media"), name="media")
+
+# Serve built frontend (Vite build)
+app.mount("/", StaticFiles(directory="Backend/app/static/dist", html=True), name="frontend")

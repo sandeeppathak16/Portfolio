@@ -1,5 +1,12 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import MDEditor, { commands } from '@uiw/react-md-editor';
+import { UploadAPI } from '@/api';
+
+
+interface RichTextEditorProps {
+  value: string;
+  onChange: (val: string) => void;
+}
 
 const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -20,6 +27,10 @@ const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
       await handleFileUpload(file);
     }
   };
+
+  const handleEditorChange = (val?: string) => {
+      onChange(val || '');
+   };
 
   const customImageCommand = {
       name: 'image',
@@ -48,7 +59,7 @@ const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
 
       <MDEditor
         value={value}
-        onChange={onChange}
+        onChange={handleEditorChange}
         height={400}
         preview="edit"
         commands={[

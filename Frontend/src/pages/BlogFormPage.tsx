@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Input } from '/src/components/ui/input';
-import { Button } from '/src/components/ui/button';
-import RichTextEditor from '/src/components/ui/RichTextEditor';
-import { createOrUpdateBlog, getAllBlogs } from '/src/action';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import RichTextEditor from '@/components/ui/RichTextEditor';
+import { createOrUpdateBlog, getAllBlogs } from '@/action';
+import type { Blog, BlogInput } from '@/action';
 
 const BlogFormPage = () => {
   const { slug } = useParams();
@@ -18,7 +19,7 @@ const BlogFormPage = () => {
       setIsEdit(true);
       const fetch = async () => {
         const blogs = await getAllBlogs();
-        const blog = blogs.find((b) => b.slug === slug);
+        const blog = blogs.find((b: Blog) => b.slug === slug);
         if (blog) {
           setTitle(blog.title);
           setTags(blog.tags);
@@ -31,7 +32,12 @@ const BlogFormPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-      const payload = { title, tags, content, slug };
+      const payload: BlogInput = {
+          title,
+          tags,
+          content,
+          slug: slug || title.toLowerCase().replace(/\s+/g, '-'),
+        };
 
       try {
         await createOrUpdateBlog(payload, isEdit);
@@ -59,7 +65,7 @@ const BlogFormPage = () => {
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
-        <RichTextEditor value={content} onChange={(val) => setContent(val || '')} />
+        <RichTextEditor value={content} onChange={(val: string) => setContent(val || '')} />
         <div className="text-right">
           <Button type="submit">{isEdit ? 'Update' : 'Create'} Blog</Button>
         </div>

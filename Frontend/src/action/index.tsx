@@ -1,11 +1,25 @@
-import { BlogAPI, ContactAPI } from '/src/api';
+import { BlogAPI, ContactAPI } from '@/api';
+
+export interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  tags?: string;
+  content: string;
+  created_at: string;
+}
+
+export type BlogInput = Omit<Blog, 'id' | 'created_at'> & {
+  content: string;
+  slug: string;
+};
 
 export const getAllBlogs = async () => {
   return await BlogAPI.getAll();
 };
 
 export const createOrUpdateBlog = async (
-  blog: { title: string; slug?: string; tags?: string; content: string },
+  blog: BlogInput,
   isEdit: boolean
 ) => {
   if (isEdit && blog.slug) {
