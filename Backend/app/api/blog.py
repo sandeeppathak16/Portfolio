@@ -21,7 +21,7 @@ def read_blogs(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     return crud_blog.get_blogs(db, skip=skip, limit=limit)
 
 
-@router.get("/{slug}", response_model=BlogOut)
+@router.get("/{slug}/", response_model=BlogOut)
 def get_blog(slug: str, db: Session = Depends(get_db)):
     blog = crud_blog.get_blog(db, slug)
     if not blog:
@@ -38,7 +38,7 @@ def create_blog(
     return crud_blog.create_blog(db, blog)
 
 
-@router.put("/{slug}", response_model=BlogOut)
+@router.put("/{slug}/", response_model=BlogOut)
 def update_blog(
     slug: str,
     blog_data: BlogUpdate,
@@ -51,7 +51,7 @@ def update_blog(
     return crud_blog.update_blog(db, db_blog, blog_data)
 
 
-@router.delete("/{slug}")
+@router.delete("/{slug}/")
 def delete_blog(
     slug: str,
     db: Session = Depends(get_db),

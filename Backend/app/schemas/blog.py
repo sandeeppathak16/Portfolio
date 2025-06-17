@@ -7,15 +7,16 @@ from datetime import datetime
 class BlogBase(BaseModel):
     title: str
     slug: str
+    content: str
     tags: Optional[str] = None
 
 
 class BlogCreate(BlogBase):
-    content: str
+    pass
 
 
 class BlogUpdate(BlogBase):
-    content: str
+    pass
 
 
 class BlogOut(BlogBase):

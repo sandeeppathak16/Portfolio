@@ -18,6 +18,10 @@ export const getAllBlogs = async () => {
   return await BlogAPI.getAll();
 };
 
+export const getBlog = async (slug: string) => {
+    return await BlogAPI.getOne(slug)
+};
+
 export const createOrUpdateBlog = async (
   blog: BlogInput,
   isEdit: boolean

@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import MarkdownPreview from '@uiw/react-markdown-preview';
-import { getAllBlogs } from '@/action';
+import { getBlog } from '@/action';
 import type { Blog } from '@/action';
 
 const BlogDetail = () => {
@@ -10,9 +10,8 @@ const BlogDetail = () => {
 
   useEffect(() => {
     const fetchBlog = async () => {
-      const blogs = await getAllBlogs();
-      const found = blogs.find((b: Blog) => b.slug === slug);
-      setBlog(found);
+      const blog = await getBlog(slug || '');
+      setBlog(blog);
     };
 
     fetchBlog();
