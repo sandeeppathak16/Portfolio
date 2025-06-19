@@ -3,8 +3,6 @@ import logging
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
-
 
 from Backend.app.api import blog, auth, upload, contact
 from Backend.app.db.base import Base
@@ -20,19 +18,6 @@ Base.metadata.create_all(bind=engine)
 os.makedirs("media", exist_ok=True)
 
 app = FastAPI(title="Sandeep Bhardwaj Portfolio api")
-
-origins = [
-    "http://localhost:5173",  # Vite dev
-    "http://localhost:8000",  # FastAPI served frontend
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 admin_username = os.getenv("ADMIN_USERNAME")
 admin_password = os.getenv("ADMIN_PASSWORD")
@@ -64,5 +49,17 @@ app.include_router(contact.router)
 # Serve media
 app.mount("/media", StaticFiles(directory="media"), name="media")
 
-# Serve built frontend (Vite build)
-app.mount("/", StaticFiles(directory="Backend/app/static/dist", html=True), name="frontend")
+
+class SPAStaticFiles(StaticFiles):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def lookup_path(self, path: str):
+        full_path, stat_result = super().lookup_path(path)
+        if not stat_result:
+            index_path = os.path.join(self.directory, "index.html")
+            return index_path, os.stat(index_path)
+        return full_path, stat_result
+
+
+app.mount("/", SPAStaticFiles(directory="Backend/app/static/dist", html=True), name="frontend")

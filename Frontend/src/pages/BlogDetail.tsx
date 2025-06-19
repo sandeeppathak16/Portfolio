@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import MarkdownPreview from '@uiw/react-markdown-preview';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { getBlog } from '@/action';
 import type { Blog } from '@/action';
 
@@ -22,7 +23,11 @@ const BlogDetail = () => {
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">
       <h1 className="text-3xl font-bold">{blog.title}</h1>
-      <MarkdownPreview source={blog.content} />
+      <div className="prose max-w-none">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {blog.content}
+          </ReactMarkdown>
+      </div>
     </div>
   );
 };
