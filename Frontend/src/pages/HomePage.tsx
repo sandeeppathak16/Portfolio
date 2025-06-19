@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { getAllBlogs, submitContactMessage, handleDelete } from '@/action';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, ThumbsUp } from 'lucide-react';
 import { isAdmin } from '@/utils/auth';
 import type { Blog } from '@/action';
 
@@ -98,6 +98,12 @@ const HomePage = () => {
                     <p className="text-sm text-gray-500">Tags: {blog.tags || 'None'}</p>
                     <p className="text-xs text-gray-400">{new Date(blog.created_at).toLocaleDateString()}</p>
                   </CardContent>
+
+                  {/* 👍 Like count at bottom-right */}
+                  <div className="absolute bottom-2 right-2 text-sm text-gray-600 flex items-center gap-1 bg-white/70 px-2 py-1 rounded-md shadow-sm backdrop-blur-sm">
+                      <ThumbsUp className="w-4 h-4 text-green-600" />
+                      <span>{blog.like_count}</span>
+                  </div>
                 </Card>
                 {isAdmin() && <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
                   <button

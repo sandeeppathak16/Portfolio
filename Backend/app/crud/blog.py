@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from sqlalchemy import func
+from sqlalchemy import func, case
 from sqlalchemy.orm import Session
 from Backend.app.models.blog import Blog
 from Backend.app.models.feedback import Feedback
@@ -53,11 +53,12 @@ def get_blogs(db: Session, skip: int = 0, limit: int = 10, include_counts=False)
     results = (
         db.query(
             Blog,
-            func.count(func.nullif(Feedback.vote_type != 'like', True)).label("like_count"),
-            func.count(func.nullif(Feedback.vote_type != 'dislike', True)).label("dislike_count")
+            func.count(case((Feedback.vote_type == 'like', 1))).label("like_count"),
+            func.count(case((Feedback.vote_type == 'dislike', 1))).label("dislike_count")
         )
         .outerjoin(Feedback, Blog.id == Feedback.blog_id)
         .group_by(Blog.id)
+        .order_by(func.count(case((Feedback.vote_type == 'like', 1))).desc())
         .offset(skip)
         .limit(limit)
         .all()
