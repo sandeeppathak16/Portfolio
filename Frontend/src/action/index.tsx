@@ -7,11 +7,16 @@ export interface Blog {
   tags?: string;
   content: string;
   created_at: string;
+  like_count: number;
+  dislike_count: number;
+  user_feedback: 'like' | 'dislike' | null;
 }
 
-export type BlogInput = Omit<Blog, 'id' | 'created_at'> & {
-  content: string;
+export type BlogInput = {
+  title: string;
   slug: string;
+  tags?: string;
+  content: string;
 };
 
 export const getAllBlogs = async () => {
@@ -55,4 +60,35 @@ export const handleDelete = async (
     console.error('❌ Failed to delete blog:', error);
     alert('Something went wrong while deleting.');
   }
+};
+
+
+export const vote = async (
+  blog: Blog,
+  voteType: 'like' | 'dislike' | null
+): Promise<Blog> => {
+  if (blog.user_feedback === voteType) return blog; // No change
+
+  await BlogAPI.vote(blog.slug, voteType); // Send null if toggling off
+
+  let newLikeCount = blog.like_count;
+  let newDislikeCount = blog.dislike_count;
+
+  if (voteType === null) {
+    if (blog.user_feedback === 'like') newLikeCount -= 1;
+    if (blog.user_feedback === 'dislike') newDislikeCount -= 1;
+  } else if (voteType === 'like') {
+    newLikeCount += 1;
+    if (blog.user_feedback === 'dislike') newDislikeCount -= 1;
+  } else if (voteType === 'dislike') {
+    newDislikeCount += 1;
+    if (blog.user_feedback === 'like') newLikeCount -= 1;
+  }
+
+  return {
+    ...blog,
+    like_count: newLikeCount,
+    dislike_count: newDislikeCount,
+    user_feedback: voteType,
+  };
 };

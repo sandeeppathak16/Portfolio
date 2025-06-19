@@ -51,6 +51,21 @@ export class BlogAPI {
     if (!response.ok) throw new Error('Failed to delete blog');
     return await response.json();
   }
+
+  static async vote(slug: string, voteType: 'like' | 'dislike' | null) {
+    const response = await fetch(`${BASE_URL}/blogs/${slug}/vote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ vote_type: voteType }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Failed to submit feedback');
+    }
+    return await response.json();
+  }
 }
 
 export class ContactAPI {

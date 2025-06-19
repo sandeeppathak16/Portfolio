@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Literal
 
 from pydantic import BaseModel
 from datetime import datetime
@@ -22,6 +22,13 @@ class BlogUpdate(BlogBase):
 class BlogOut(BlogBase):
     id: int
     created_at: datetime
+    like_count: int
+    dislike_count: int
+    user_feedback: Optional[Literal['like', 'dislike']] = None
 
     class Config:
         orm_mode = True
+
+
+class FeedbackIn(BaseModel):
+    vote_type: Optional[str]
